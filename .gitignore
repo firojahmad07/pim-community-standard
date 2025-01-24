@@ -23,7 +23,6 @@ composer.phar
 /cov
 /phpspec.yml
 uploads_test/
-.phpspec/*.tpl
 /node_modules
 npm-debug.log
 docker-compose.override.yml

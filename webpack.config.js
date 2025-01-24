@@ -71,7 +71,10 @@ const webpackConfig = {
     symlinks: false,
     alias: _.mapKeys(aliases, (path, key) => `${key}$`),
     modules: [path.resolve('./public/bundles'), path.resolve('./node_modules')],
-    extensions: ['.js', '.json', '.ts', '.tsx']
+    extensions: ['.js', '.json', '.ts', '.tsx'],
+    // fallback: {
+    //   crypto: false,
+    // }
   },
   module: {
     rules: [

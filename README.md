@@ -1,40 +1,41 @@
-# Akeneo PIM Development Repository
-Welcome to Akeneo PIM Product.
-
-This repository is used to develop the Akeneo PIM product.
-
-Practically, it means the Akeneo PIM source code is present in the src/ directory.
-
-**If you want to create a new PIM project based on Akeneo PIM, please use https://www.github.com/akeneo/pim-community-standard**
-
-If you want to contribute to the Akeneo PIM (and we will be pleased if you do!), you can fork this repository and submit a pull request.
-
-Scrutinizer | Crowdin
------------ | -------
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/akeneo/pim-community-dev/badges/quality-score.png?s=05ef3d5d2bbfae2f9a659060b21711d275f0c1ff)](https://scrutinizer-ci.com/g/akeneo/pim-community-dev/) | [![Crowdin](https://d322cqt584bo4o.cloudfront.net/akeneo/localized.svg)](https://crowdin.com/project/akeneo)
-
-## Application Technical Information
-
-The following documentation is designed for both clients and partners and provides all technical information required to define required server(s) to run Akeneo PIM application and check that end users workstation is compatible with Akeneo PIM application:
-https://docs.akeneo.com/master/install_pim/manual/system_requirements/system_requirements.html
-
 ## Installation instructions
 
 To install Akeneo PIM for a PIM project or for evaluation, please follow:
-https://docs.akeneo.com/master/install_pim/index.html
 
 ### Build the Docker image for local development
 
 ```bash
-docker build --target dev -t akeneo/pim-php-dev:master .
+docker-compose up --build -d
 ```
 
-## Upgrade instructions
+## Login in pim-php Container and follow bellow instractions.
 
-To upgrade Akeneo PIM to a newer version, please follow:
-https://docs.akeneo.com/master/migrate_pim/index.html
+```
+docker exec -it pim-php bash
+```
 
-## Testing instructions
+### Package Installation
+```
+yarn install
+composer install
+```
+```
+php bin/console pim:installer:db --catalog src/Akeneo/Platform/Bundle/InstallerBundle/Resources/fixtures/icecat_demo_dev
+```
 
-To run the tests of Akeneo PIM, please follow:
-https://github.com/akeneo/pim-community-dev/blob/master/internal_doc/tests/running_the_tests.md
+### Required Commands
+```
+chown -R www-data:www-data /var/www/html/var/cache
+chmod -R 775 /var/www/html/var/cache
+```
+
+```
+rm -rf var/cache/** && bin/console pim:installer:assets && bin/console ca:cl && yarn run less && yarn run webpack && yarn run update-extensions
+```
+
+### Reset Product Index
+```
+php bin/console akeneo:elasticsearch:reset-indexes --env=prod && php bin/console pim:product:index --all --env=prod && php bin/console pim:product-model:index --all --env=prod
+```
+
+
